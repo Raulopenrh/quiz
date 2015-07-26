@@ -20,6 +20,16 @@ exports.answer = function(req, res){
 
 exports.index = function(req, res){
 	models.Quiz.findAll().then(function(quizes){
-		res.render('quizes/index.ejs', { quizes: quizes});
+		res.render('quizes/index', { quizes: quizes});
 	});
 };
+
+exports.buscar = function(req, res){
+	models.Quiz.findAll({where: ["pregunta like ?", "%"+req.query.search+"%"]}).then(function(quizes){
+		if (quizes.length > 0 && req.query.search !== ""){
+			res.render('quizes/index' , { quizes: quizes});
+		}else{
+			res.render('quizes/resultado', {respuesta: 'Ningun registro encontrado'});
+		}
+	})
+}

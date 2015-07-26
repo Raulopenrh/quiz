@@ -14,10 +14,10 @@ router.get('/author', function(req, res){
 	res.render('author');
 });
 
-/*
 router.get('/vistaBuscar', function(req, res){
 	res.render('quizes/vistaBuscar');
 });
-*/
+
+router.get('/quizes/buscar', quizController.buscar);
 
 module.exports = router;
