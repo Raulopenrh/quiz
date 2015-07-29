@@ -33,9 +33,9 @@ exports.index = function(req, res){
 exports.buscar = function(req, res){
 	models.Quiz.findAll({where: ["pregunta like ?", "%"+req.query.search+"%"]}).then(function(quizes){
 		if (quizes.length > 0 && req.query.search !== ""){
-			res.render('quizes/index' , { quizes: quizes});
+			res.render('quizes/index' , { quizes: quizes, errors: []});
 		}else{
-			res.render('quizes/resultado', {respuesta: 'Ningun registro encontrado'});
+			res.render('quizes/resultado', {respuesta: 'Ningun registro encontrado', errors: []});
 		}
 	}).catch(function(error){ next(error);});
 }
@@ -49,6 +49,7 @@ exports.new = function(req, res){
 
 exports.create = function(req, res){
 	var quiz = models.Quiz.build(req.body.quiz);
+	console.log(quiz.validate());
 	quiz.validate().then(function(err){
 		if(err){
 			res.render('quizes/new', {quiz: quiz, errors: err.errors});
