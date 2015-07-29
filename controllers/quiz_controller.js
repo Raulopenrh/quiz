@@ -1,7 +1,7 @@
 var models = require('../models/models.js');
 
 //Autoload - MW que gestiona la lectura y los casos de error.
-exports.load = function(req, res, next, quiId){
+exports.load = function(req, res, next, quizId){
 	models.Quiz.find(quizId).then(function(quiz){
 		if(quiz){
 			req.quiz = quiz;
