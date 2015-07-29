@@ -22,13 +22,13 @@ exports.answer = function(req, res){
 		resultado = 'Correcto¡¡';
 	}
 	res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado});
-};
+}
 
 exports.index = function(req, res){
 	models.Quiz.findAll().then(function(quizes){
 		res.render('quizes/index', { quizes: quizes});
 	}).catch(function(error){ next(error);});
-};
+}
 
 exports.buscar = function(req, res){
 	models.Quiz.findAll({where: ["pregunta like ?", "%"+req.query.search+"%"]}).then(function(quizes){
@@ -37,5 +37,19 @@ exports.buscar = function(req, res){
 		}else{
 			res.render('quizes/resultado', {respuesta: 'Ningun registro encontrado'});
 		}
-	})
+	}).catch(function(error){ next(error);});
+}
+
+exports.new = function(req, res){
+	var quiz = models.Quiz.build(
+		{pregunta: "Pregunta", respuesta: "Respuesta"}
+	);
+	res.render('quizes/new', {quiz: quiz});
+}
+
+exports.create = function(req, res){
+	var quiz = models.Quiz.build(req.body.quiz);
+	quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+		res.redirect('/quizes');
+	});
 }
