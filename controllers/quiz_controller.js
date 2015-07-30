@@ -10,11 +10,11 @@ exports.load = function(req, res, next, quizId){
 			next(new Error('No existe quizId=' + quizId));
 		}
 	}).catch(function(error){ next(error);});
-}
+};
 
 exports.show = function(req, res){
 	res.render('quizes/show' , { quiz: req.quiz, errors: []});
-}
+};
 
 exports.answer = function(req, res){
 	var resultado = 'Incorrecto';
@@ -22,13 +22,13 @@ exports.answer = function(req, res){
 		resultado = 'Correcto¡¡';
 	}
 	res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado, errors: []});
-}
+};
 
 exports.index = function(req, res){
 	models.Quiz.findAll().then(function(quizes){
 		res.render('quizes/index', { quizes: quizes, errors: []});
 	}).catch(function(error){ next(error);});
-}
+};
 
 exports.buscar = function(req, res){
 	models.Quiz.findAll({where: ["pregunta like ?", "%"+req.query.search+"%"]}).then(function(quizes){
@@ -38,18 +38,17 @@ exports.buscar = function(req, res){
 			res.render('quizes/resultado', {respuesta: 'Ningun registro encontrado', errors: []});
 		}
 	}).catch(function(error){ next(error);});
-}
+};
 
 exports.new = function(req, res){
 	var quiz = models.Quiz.build(
 		{pregunta: "Pregunta", respuesta: "Respuesta"}
 	);
 	res.render('quizes/new', {quiz: quiz, errors: []});
-}
+};
 
 exports.create = function(req, res){
 	var quiz = models.Quiz.build(req.body.quiz);
-	console.log(quiz.validate());
 	quiz.validate().then(function(err){
 		if(err){
 			res.render('quizes/new', {quiz: quiz, errors: err.errors});
@@ -59,4 +58,24 @@ exports.create = function(req, res){
 			});		
 		}
 	});
-}
+};
+
+exports.edit = function(req, res){
+	var quiz = req.quiz;
+	res.render('quizes/edit', {quiz: quiz, errors: []});
+};
+
+exports.update = function(req, res){
+	req.quiz.pregunta = req.body.quiz.pregunta;
+	req.quiz.respuesta = req.body.quiz.respuesta;
+
+	req.quiz.validate().then(function(err){
+		if(err){
+			res.render('quizes/edit', {quiz: req.quiz, errors: err.errors});
+		}else{
+			req.quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+				res.redirect('/quizes');
+			});
+		}
+	});
+};
