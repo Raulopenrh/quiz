@@ -24,13 +24,13 @@ exports.answer = function(req, res){
 	res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado, errors: []});
 };
 
-exports.index = function(req, res){
+exports.index = function(req, res, next){
 	models.Quiz.findAll().then(function(quizes){
 		res.render('quizes/index', { quizes: quizes, errors: []});
 	}).catch(function(error){ next(error);});
 };
 
-exports.buscar = function(req, res){
+exports.buscar = function(req, res, next){
 	models.Quiz.findAll({where: ["pregunta like ?", "%"+req.query.search+"%"]}).then(function(quizes){
 		if (quizes.length > 0 && req.query.search !== ""){
 			res.render('quizes/index' , { quizes: quizes, errors: []});
@@ -82,7 +82,7 @@ exports.update = function(req, res){
 	});
 };
 
-exports.destroy = function(req, res){
+exports.destroy = function(req, res, next){
 	req.quiz.destroy().then(function(){
 		res.redirect('/quizes');
 	}).catch(function(error){next(error)});
