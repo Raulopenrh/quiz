@@ -25,13 +25,13 @@ exports.answer = function(req, res){
 };
 
 exports.index = function(req, res, next){
-	models.Quiz.findAll().then(function(quizes){
+	models.Quiz.findAll({order:'pregunta ASC'}).then(function(quizes){
 		res.render('quizes/index', { quizes: quizes, errors: []});
 	}).catch(function(error){ next(error);});
 };
 
 exports.buscar = function(req, res, next){
-	models.Quiz.findAll({where: ["pregunta like ?", "%"+req.query.search+"%"]}).then(function(quizes){
+	models.Quiz.findAll({where: ["pregunta like ?", "%"+req.query.search+"%"],order:'pregunta ASC'}).then(function(quizes){
 		if (quizes.length > 0 && req.query.search !== ""){
 			res.render('quizes/index' , { quizes: quizes, errors: []});
 		}else{
