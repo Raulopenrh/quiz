@@ -1,20 +1,26 @@
 <table class="tabla">
 	<tr>
 		<td>Pregunta</td>
-		<td>Tematico</td>
-		<td colspan="2">Opciones</td>
+		<% if(session.user) {%>
+			<td>Tematico</td>
+			<td colspan="2">Opciones</td>
+		<% } %>
 	</tr>
 	<% var i; for (i=0;i < quizes.length; i++){ %>
 		<tr>
 			<td style="text-align:left"><a href="/quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
-			<td><%= quizes[i].tematico %></td>
-			<td><a href="/quizes/<%= quizes[i].id %>/edit"><button>Editar</button></a></td>
-			<td>
-				<form method="post" action="/quizes/<%= quizes[i].id %>?_method=delete">
-					<button type="submit" onclick="return confirm('Borrar: <%= quizes[i].pregunta %>');">Borrar</button>
-				</form>
-			</td>
+			<% if(session.user) {%>
+				<td><%= quizes[i].tematico %></td>
+				<td><a href="/quizes/<%= quizes[i].id %>/edit"><button>Editar</button></a></td>
+				<td>
+					<form method="post" action="/quizes/<%= quizes[i].id %>?_method=delete">
+						<button type="submit" onclick="return confirm('Borrar: <%= quizes[i].pregunta %>');">Borrar</button>
+					</form>
+				</td>
+			<% } %>
 		</tr>
 	<%	} %>
 </table>
-<a href="/quizes/new"><button type="button">Crear pregunta</button></a>
+<% if(session.user) {%>
+	<a href="/quizes/new"><button type="button">Crear pregunta</button></a>
+<% } %>
