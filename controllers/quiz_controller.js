@@ -56,7 +56,6 @@ exports.create = function(req, res){
 		if(err){
 			res.render('quizes/new', {quiz: quiz, errors: err.errors});
 		}else{
-			console.log(quiz.tematico);
 			quiz.save({fields: ["pregunta", "respuesta", "tematico"]}).then(function(){
 				res.redirect('/quizes');
 			});		

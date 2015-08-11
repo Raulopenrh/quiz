@@ -40,6 +40,23 @@ app.use(function(req, res, next){
     next();
 });
 
+//MW para controlar el tiempo de actividad de una sesion
+app.use(function(req, res, next){
+    if(req.session.user){
+        var actual = new  Date().toJSON();
+        if(req.session.autologout < actual){
+            delete req.session.user;
+            delete req.session.autologout;
+            console.log('sesion destruida');
+        }else{
+            req.session.autologout = new Date();
+            req.session.autologout.setMinutes(req.session.autologout.getMinutes() + 2);
+            console.log('Sesion actualizada: '+ req.session.autologout);
+        }
+    }
+    next();
+});
+
 app.use('/', routes);
 
 // catch 404 and forward to error handler
